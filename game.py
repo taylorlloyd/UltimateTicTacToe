@@ -7,17 +7,17 @@ class Game:
              (6, 7, 8), (0, 4, 8),
              (2, 4, 6), (0, 3, 6),
              (1, 4, 7), (2, 5, 8))
-
+    players = []
     def playGame(self, player1, player2):
         """Given two players, play a game to completion."""
-        players = [player1, player2]
-        shuffle(players)
+        self.players = [player1, player2]
+        #shuffle(players)
 
         game = self.getBoard()
         next_player = 0
 
         while(not self.gameOver(game)):
-            choice = players[next_player].playTurn(game)
+            choice = self.players[next_player].playTurn(game)
             #print game["forced"]
             game["array"][choice] = next_player + 1
             game["forced"] = self.ANY
@@ -43,11 +43,12 @@ class Game:
                 for line in self.LINES:
                     match = 3
                     for elem in line:
-                        match &= game["array"][i+elem]
+                        match &= game["array"][(9*i)+elem]
                     if not game["outer"][i]:
                         game["outer"][i] = match
                         #if match:
                             #print "Player "+str(match)+" took "+str(i)
+                            #print line
 
         # Iterate over the outer game to detect game over
 
@@ -57,8 +58,11 @@ class Game:
                 for elem in line:
                     match &= game["outer"][elem]
                 if match != 0:
-                    print "Game Over!"
-                    print str(match) + " wins!"
+                    #print "Game Over!"
+                    #print str(match) + " wins!"
+                    self.players[match-1].notifyWin()
+                    self.players[2-match].notifyLose()
+                    #print line
                     return True
         
         # Make sure we aren't out of squares
