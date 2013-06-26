@@ -2,14 +2,24 @@ from random import shuffle
 
 class Game:
     
+    # Number used to indicate no block is forced
     ANY = 9
+
+    # All straight lines in a 3x3 block
     LINES = ((0, 1, 2), (3, 4, 5),
              (6, 7, 8), (0, 4, 8),
              (2, 4, 6), (0, 3, 6),
              (1, 4, 7), (2, 5, 8))
+
+    # List of players involved in a game
     players = []
+
     def playGame(self, player1, player2):
-        """Given two players, play a game to completion."""
+        """
+        Given two players, play a game to completion.
+        
+        Player 1 will always go first.
+        """
         self.players = [player1, player2]
         #shuffle(players)
 
@@ -29,13 +39,23 @@ class Game:
             #raw_input("")
 
     def getBoard(self):
-        """Return a Game Board dict representing a new game."""
+        """
+        Return a Game Board dict representing a new game.
+        
+            game["forced"] indicates which block is necessary, or 9 if any.
+            game["array"] is 81 elements, with each section of 9 indicating a singe TicTacToe board
+            game["outer"] indicates progress on each outer set
+        """
         return {"forced": self.ANY, 
                 "array": [0 for x in range(81)],
                 "outer": [0 for x in range(9)]}
 
     def gameOver(self, game):
-        """Given a game board, check if the game is over."""
+        """
+        Given a game board, check if the game is over.
+        
+        This method also takes responsibility for notifying players of wins and losses.
+        """
         # Iterate over all of the inner games, to detect a win
 
         for i in range(9):
