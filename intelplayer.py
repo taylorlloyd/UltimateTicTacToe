@@ -1,4 +1,5 @@
 import operator
+import pickle
 
 from  player import Player
 from fractions import Fraction
@@ -13,9 +14,9 @@ class IntelPlayer(Player):
     STATE_SIZE = (3 ** 90)
 
     # Mem Size - The number of state-action entries allocated to the system
-    MEM_SIZE = 2 ** 22
+    MEM_SIZE = 2 ** 14
 
-    states = [[0.0 for x in range(81)] for i in range(MEM_SIZE)]
+    states = []
     
     # Update Delta - Quantity of change resulting from a push-back
     update_delta = 0.1
@@ -24,6 +25,15 @@ class IntelPlayer(Player):
     last_mem = (0,0,0)
     last_index = 0
     
+    def newState(self):
+        self.states = [[0.0 for x in range(81)] for i in range(self.MEM_SIZE)]
+
+    def dumpState(self, filename):
+        pickle.dump(self.states, open(filename,'w'))
+
+    def loadState(self, filename):
+        self.states = pickle.load(open(filename,'r'))
+
     def getState(self, board):
         """
         Returns a number uniquely identifying the board state
